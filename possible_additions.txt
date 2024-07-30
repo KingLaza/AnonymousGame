@@ -1,0 +1,5 @@
+implementing a timer and adding the option to limit the wait time in between rounds
+that option can be set at lobby creations or changed after lobby is created but 
+only by the lobby creator or current lobby leader
+
+the possiblity to change the player selected colour. Default is random colour.
