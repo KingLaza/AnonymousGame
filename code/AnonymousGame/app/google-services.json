@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "719834202300",
+    "firebase_url": "https://anonymousgame-7c8ee-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "anonymousgame-7c8ee",
+    "storage_bucket": "anonymousgame-7c8ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719834202300:android:9e68c2659eaf4809e6d0b9",
+        "android_client_info": {
+          "package_name": "com.example.anonymousgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy1R-ax46mKrf6aFMLZdE6ymBJ1aQuyy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719834202300:android:b3ff9154955bf1dee6d0b9",
+        "android_client_info": {
+          "package_name": "com.example.anonymousgame05"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy1R-ax46mKrf6aFMLZdE6ymBJ1aQuyy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
