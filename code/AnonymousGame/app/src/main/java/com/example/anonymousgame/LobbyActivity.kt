@@ -12,18 +12,23 @@ class LobbyActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
     private lateinit var roomName: String
+    private lateinit var playerName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
 
         roomName = intent.getStringExtra("roomName") ?: ""
+        playerName = intent.getStringExtra("playerName") ?: "Unknown"
         database = FirebaseDatabase.getInstance("https://anonymousgame-7c8ee-default-rtdb.europe-west1.firebasedatabase.app").getReference("rooms").child(roomName)
+
+        // Add player to the room's player list
+        addPlayerToRoom()
 
         // Display the number of players
         displayPlayerCount()
 
-        //I added this to listen to round changes
+        // Listen for round changes
         listenForGameState()
 
         findViewById<Button>(R.id.startGameButton).setOnClickListener {
@@ -33,6 +38,18 @@ class LobbyActivity : AppCompatActivity() {
             exitLobby()
         }
     }
+
+    private fun addPlayerToRoom() {
+        database.child("players").child(playerName).setValue(mapOf("name" to playerName))
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.i("LobbyActivity", "Player $playerName added to room $roomName")
+                } else {
+                    Log.e("LobbyActivity", "Failed to add player: ${task.exception?.message}")
+                }
+            }
+    }
+
 
     private fun displayPlayerCount() {
         database.child("players").addValueEventListener(object : ValueEventListener {
@@ -53,13 +70,14 @@ class LobbyActivity : AppCompatActivity() {
         database.child("gameState").child("round").setValue(1).addOnCompleteListener {
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("roomName", roomName)
+            intent.putExtra("playerName", playerName)  // Pass player name to BrowseLobbiesActivity
             startActivity(intent)
         }
     }
 
     private fun exitLobby() {
         // Remove the current player from the lobby
-        val playerRef = database.child("players").child("HostName")  // Adjust this to get the correct player
+        val playerRef = database.child("players").child(playerName)  // Adjust this to get the correct player
         playerRef.removeValue().addOnCompleteListener {
             // Check if the lobby is empty and delete it if necessary
             checkAndDeleteLobby()

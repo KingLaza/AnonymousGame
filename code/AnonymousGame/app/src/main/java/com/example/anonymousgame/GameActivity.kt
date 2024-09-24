@@ -15,13 +15,15 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
     private lateinit var roomName: String
+    private lateinit var playerName: String // Added playerName to track the current player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        // Get the room name from the intent
+        // Get the room name and player name from the intent
         roomName = intent.getStringExtra("roomName") ?: ""
+        playerName = intent.getStringExtra("playerName") ?: "Unknown"
 
         // Initialize the Firebase database reference
         database = FirebaseDatabase.getInstance("https://anonymousgame-7c8ee-default-rtdb.europe-west1.firebasedatabase.app")
@@ -53,7 +55,7 @@ class GameActivity : AppCompatActivity() {
     // Exit the game and clean up the lobby if necessary
     private fun exitGame() {
         // Remove the current player from the lobby
-        val playerRef = database.child("players").child("HostName")  // Adjust this to the correct player
+        val playerRef = database.child("players").child(playerName) // Remove the correct player
         playerRef.removeValue().addOnCompleteListener {
             // Check if the lobby is empty and delete it if necessary
             checkAndDeleteLobby()
@@ -72,6 +74,7 @@ class GameActivity : AppCompatActivity() {
                 if (!snapshot.hasChildren()) {
                     // If no players are left, delete the lobby
                     database.removeValue()
+                    Log.i("GameActivity", "Lobby $roomName deleted as it's empty.")
                 }
             }
 

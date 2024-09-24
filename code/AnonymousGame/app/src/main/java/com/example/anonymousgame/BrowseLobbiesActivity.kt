@@ -16,6 +16,7 @@ class BrowseLobbiesActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
     private lateinit var lobbiesListView: ListView
+    private lateinit var playerName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +24,8 @@ class BrowseLobbiesActivity : AppCompatActivity() {
 
         lobbiesListView = findViewById(R.id.lobbiesListView)
         database = FirebaseDatabase.getInstance("https://anonymousgame-7c8ee-default-rtdb.europe-west1.firebasedatabase.app").reference
+
+        playerName = intent.getStringExtra("playerName") ?: "Player${(100000..999999).random()}"
 
         loadLobbies()
     }
@@ -38,6 +41,7 @@ class BrowseLobbiesActivity : AppCompatActivity() {
                     val selectedLobby = lobbies[position]
                     val intent = Intent(this@BrowseLobbiesActivity, LobbyActivity::class.java)
                     intent.putExtra("roomName", selectedLobby)
+                    intent.putExtra("playerName", playerName) // Pass player name to LobbyActivity
                     startActivity(intent)
                 }
             }
