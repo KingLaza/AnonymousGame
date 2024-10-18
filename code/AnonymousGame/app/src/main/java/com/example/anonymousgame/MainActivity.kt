@@ -21,6 +21,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var playerName: String
 
+    private fun generatePlayerName(): String {
+        val sharedPrefs = getSharedPreferences("gamePrefs", MODE_PRIVATE)
+        var playerName = sharedPrefs.getString("playerName", null)
+
+        if (playerName == null) {
+            playerName = "Player${Random.nextInt(10000, 99999)}"
+            sharedPrefs.edit().putString("playerName", playerName).apply() // Save the generated name
+        }
+        return playerName
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val maxPlayersEditText = findViewById<EditText>(R.id.maxPlayersEditText)
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
 
-        playerName = "Player${Random.nextInt(10000, 99999)}"
+        playerName = generatePlayerName()
         val playerNameTextView = findViewById<TextView>(R.id.playerNameDisplay)
         playerNameTextView.text = playerName
 
@@ -42,8 +53,14 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("Edit Player Name")
                 .setView(editNameDialog)
                 .setPositiveButton("OK") { dialog, _ ->
-                    playerName = editNameDialog.text.toString()
-                    playerNameTextView.text = playerName
+                    val inputedName = editNameDialog.text.toString()
+                    if (inputedName != ""){
+                        playerName = editNameDialog.text.toString()
+                        playerNameTextView.text = playerName
+                        val sharedPrefs = getSharedPreferences("gamePrefs", MODE_PRIVATE)
+                        sharedPrefs.edit().putString("playerName", playerName).apply() // Save the generated name
+                    }
+
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
@@ -61,16 +78,14 @@ class MainActivity : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.createRoomButton).setOnClickListener {
-            val lobbyName = lobbyNameEditText.text.toString().ifEmpty { "Lobby_${System.currentTimeMillis()}" } // Default name if empty
-            val maxPlayers = maxPlayersEditText.text.toString().toIntOrNull() ?: 4 // Default to 4 players
-            val password = passwordEditText.text.toString()
-
+            val intent = Intent(this, CreateLobbyActivity::class.java)
             if (!playerNameTextView.text.isNullOrEmpty()) {
                 playerName = playerNameTextView.text.toString()
             }
-
-            createRoom(lobbyName, maxPlayers, password, playerName)
+            intent.putExtra("playerName", playerName)
+            startActivity(intent)
         }
+
 
         findViewById<Button>(R.id.joinSpecificLobbyButton).setOnClickListener {
             val intent = Intent(this, JoinSpecificLobbyActivity::class.java)
@@ -79,10 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
             intent.putExtra("playerName", playerName)
             startActivity(intent)
-        }
-
-        findViewById<Button>(R.id.joinRandomLobbyButton).setOnClickListener {
-            joinRandomLobby()
         }
 
         findViewById<Button>(R.id.browseLobbiesButton).setOnClickListener {
@@ -102,25 +113,7 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun joinRandomLobby() {
-        database.child("rooms").orderByKey().limitToFirst(1).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val firstLobby = snapshot.children.firstOrNull()
-                if (firstLobby != null) {
-                    val intent = Intent(this@MainActivity, LobbyActivity::class.java)
-                    intent.putExtra("roomName", firstLobby.key)
-                    startActivity(intent)
-                } else {
-                    Log.e("MainActivity", "No lobbies available")
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("MainActivity", "Error: ${error.message}")
-            }
-        })
-    }
 
     private fun createRoom(lobbyName: String, maxPlayers: Int, password: String?, playerName: String) {
         val roomData = mapOf(

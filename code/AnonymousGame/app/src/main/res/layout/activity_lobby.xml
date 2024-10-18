@@ -1,20 +1,56 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LobbyActivity">
 
+    <!-- Lobby Name and Player Info -->
+    <TextView
+        android:id="@+id/lobbyNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lobby Name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp" />
+
     <TextView
         android:id="@+id/playerCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Players: 0"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="Player count: 0"
+        app:layout_constraintTop_toBottomOf="@id/lobbyNameTextView"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
 
+    <TextView
+        android:id="@+id/lobbyPasswordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password: None"
+        app:layout_constraintTop_toBottomOf="@id/playerCountTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Player Names -->
+    <TextView
+        android:id="@+id/playersTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Players:"
+        app:layout_constraintTop_toBottomOf="@id/lobbyPasswordTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <!-- Start and Exit Buttons -->
     <Button
         android:id="@+id/startGameButton"
         android:layout_width="wrap_content"
@@ -23,8 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="32dp"
-        android:layout_marginEnd="16dp"/>
-
+        android:layout_marginEnd="16dp" />
 
     <Button
         android:id="@+id/exitLobbyButton"
@@ -34,8 +69,6 @@
         android:layout_marginBottom="16dp"
         android:text="Exit Lobby"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.003"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

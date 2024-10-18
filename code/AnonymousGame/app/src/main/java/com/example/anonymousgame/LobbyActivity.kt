@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 
@@ -26,14 +27,31 @@ class LobbyActivity : AppCompatActivity() {
         addPlayerToRoom()
 
         // Display the number of players
-        displayPlayerCount()
+        displayPlayerCount()                //you can just delete this afterwards, because you have displayLobbyInfo that does more
+
+        displayLobbyInfo()
 
         // Listen for round changes
         listenForGameState()
 
         findViewById<Button>(R.id.startGameButton).setOnClickListener {
-            startGame()
+            database.child("players").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val playerCount = snapshot.childrenCount
+                    if (playerCount < 2) {
+                        // Show error, can't start with less than 2 players
+                        Toast.makeText(this@LobbyActivity, "You need at least 2 players to start the game!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        startGame()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("LobbyActivity", "Error checking player count: ${error.message}")
+                }
+            })
         }
+
         findViewById<Button>(R.id.exitLobbyButton).setOnClickListener {
             exitLobby()
         }
@@ -50,6 +68,35 @@ class LobbyActivity : AppCompatActivity() {
             }
     }
 
+    private fun displayLobbyInfo() {
+        database.addValueEventListener(object : ValueEventListener {           //addListenerForSingleValueEvent
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val lobbyName = snapshot.key ?: ""
+                val maxPlayers = snapshot.child("maxPlayers").getValue(Int::class.java) ?: 4
+                val password = snapshot.child("password").getValue(String::class.java)
+                val playersSnapshot = snapshot.child("players")
+
+                // Display lobby name, player count, and max players
+                findViewById<TextView>(R.id.lobbyNameTextView).text = "Lobby: $lobbyName"
+                findViewById<TextView>(R.id.playerCountTextView).text = "Players: ${playersSnapshot.childrenCount}/$maxPlayers"
+
+                // Display lobby password if it exists
+                if (!password.isNullOrEmpty()) {
+                    findViewById<TextView>(R.id.lobbyPasswordTextView).text = "Password: $password"
+                } else {
+                    findViewById<TextView>(R.id.lobbyPasswordTextView).text = "No Password"
+                }
+
+                // Display player names
+                val playerNames = playersSnapshot.children.map { it.child("name").getValue(String::class.java) ?: "" }
+                findViewById<TextView>(R.id.playersTextView).text = "Players:\n${playerNames.joinToString("\n")}"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("LobbyActivity", "Error fetching lobby data: ${error.message}")
+            }
+        })
+    }
 
     private fun displayPlayerCount() {
         database.child("players").addValueEventListener(object : ValueEventListener {

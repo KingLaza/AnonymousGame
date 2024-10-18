@@ -34,6 +34,12 @@
         <!-- Declare BrowseLobbiesActivity if needed -->
         <activity android:name=".BrowseLobbiesActivity" />
 
+        <activity android:name=".CreateLobbyActivity" />
+
+        <activity android:name=".Round2Activity" />
+
+        <activity android:name=".Round3Activity" />
+
     </application>
 
 </manifest>

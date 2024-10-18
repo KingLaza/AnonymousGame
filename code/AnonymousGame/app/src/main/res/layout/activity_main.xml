@@ -1,10 +1,12 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Game Title -->
     <TextView
         android:id="@+id/gameTitle"
         android:layout_width="wrap_content"
@@ -17,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Player Name -->
     <TextView
         android:id="@+id/playerNameLabel"
         android:layout_width="wrap_content"
@@ -39,8 +42,8 @@
         android:text="Player12345"
         android:textColor="?android:attr/textColorPrimary"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/playerNameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
+        app:layout_constraintStart_toEndOf="@id/playerNameLabel"
+        app:layout_constraintTop_toBottomOf="@id/gameTitle" />
 
     <ImageView
         android:id="@+id/editPlayerNameIcon"
@@ -49,43 +52,44 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/change_name"
-        app:layout_constraintStart_toEndOf="@+id/playerNameDisplay"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
-        android:contentDescription="Edit Player Name"
-        />
+        app:layout_constraintStart_toEndOf="@id/playerNameDisplay"
+        app:layout_constraintTop_toBottomOf="@id/gameTitle"
+        android:contentDescription="Edit Player Name" />
 
-
-    <EditText
-        android:id="@+id/lobbyNameEditText"
+    <!-- Lobby Creation fields - Hidden initially -->
+    <LinearLayout
+        android:id="@+id/lobbyCreationLayout"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:hint="Lobby Name"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerNameLabel" />
+        app:layout_constraintTop_toBottomOf="@id/playerNameLabel">
 
-    <EditText
-        android:id="@+id/maxPlayersEditText"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:hint="Max Players (default: 4)"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lobbyNameEditText" />
+        <EditText
+            android:id="@+id/lobbyNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Lobby Name" />
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:hint="Password (optional)"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maxPlayersEditText" />
+        <EditText
+            android:id="@+id/maxPlayersEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Max Players (default: 4)"
+            android:inputType="number" />
 
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Password (optional)"
+            android:inputType="textPassword" />
+    </LinearLayout>
 
+    <!-- Buttons -->
     <Button
         android:id="@+id/createRoomButton"
         android:layout_width="wrap_content"
@@ -94,8 +98,7 @@
         android:layout_marginTop="16dp"
         android:text="Create Room"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
-
+        app:layout_constraintTop_toBottomOf="@id/lobbyCreationLayout" />
 
     <Button
         android:id="@+id/joinSpecificLobbyButton"
@@ -106,15 +109,7 @@
         android:text="Join Specific Lobby"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/createRoomButton" />
-    <Button
-        android:id="@+id/joinRandomLobbyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Join Random Lobby"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/joinSpecificLobbyButton" />
+
     <Button
         android:id="@+id/browseLobbiesButton"
         android:layout_width="wrap_content"
@@ -123,23 +118,22 @@
         android:layout_marginTop="16dp"
         android:text="Browse Lobbies"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/joinRandomLobbyButton" />
+        app:layout_constraintTop_toBottomOf="@id/joinSpecificLobbyButton" />
 
-
+    <!-- Leave Game Button with Door Icon -->
     <Button
         android:id="@+id/leaveGameButton"
         android:layout_width="160dp"
         android:layout_height="78dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/leave_game"
-        android:src="@drawable/leave_game"
         android:text="Leave game"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/browseLobbiesButton"
+        app:layout_constraintTop_toBottomOf="@id/browseLobbiesButton"
         app:layout_constraintVertical_bias="0.915" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

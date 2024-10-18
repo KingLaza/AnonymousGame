@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/questionsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- This LinearLayout will dynamically hold the questions and answers -->
+
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/exitGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit Game"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
+</LinearLayout>
