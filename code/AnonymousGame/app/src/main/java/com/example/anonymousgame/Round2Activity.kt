@@ -33,7 +33,7 @@ class Round2Activity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.exitGameButton).setOnClickListener {
-            finish()
+            confirmExitGame()
         }
 
         listenForAllPlayersReady()
@@ -191,5 +191,40 @@ class Round2Activity : AppCompatActivity() {
         intent.putExtra("playerName", playerName)
         startActivity(intent)
         finish()
+    }
+
+    private fun confirmExitGame() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Exit Game")
+        builder.setMessage("Are you sure you want to quit the game?")
+
+        builder.setPositiveButton("Yes") { dialog, _ -> exitGame() }
+        builder.setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+
+        builder.show()
+    }
+
+    private fun exitGame() {
+        val playerRef = database.child("players").child(playerName)
+        playerRef.removeValue().addOnCompleteListener {
+            checkAndDeleteLobby()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun checkAndDeleteLobby() {
+        database.child("players").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.hasChildren()) {
+                    database.removeValue()
+                    Log.i("GameActivity", "Lobby $roomName deleted as it's empty.")
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("GameActivity", "Failed to check players: ${error.message}")
+            }
+        })
     }
 }

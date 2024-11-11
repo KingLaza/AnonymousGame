@@ -39,9 +39,6 @@ class GameActivity : AppCompatActivity() {
         listenForAllPlayersReady()
         findViewById<Button>(R.id.finishButton).setOnClickListener {
             setPlayerReady()
-        }
-
-        findViewById<Button>(R.id.finishButton).setOnClickListener {
             submitQuestion()
         }
     }
